@@ -1,0 +1,3 @@
+docker>=3.0.0,<4.0.0
+testpack_helper_library
+selenium==3.8.0
