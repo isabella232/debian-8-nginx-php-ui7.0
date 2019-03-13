@@ -1,22 +1,23 @@
-# Nginx with PHP 7.2 on Debian 9 (stretch)
+# Nginx with PHP 7.0 on Debian 8 (Jessie)
 
-This image provides a common PHP hosting environment. The intent is for the PHP application itself to be stored in persistent storage wihch is then mounted in to this image at `/var/www`
+This image provides a common PHP hosting environment. The intent is for the PHP application itself to be stored in persistent storage which is then mounted in to this image at `/var/www`
 
 ## Updates
 
-Please consult https://wiki.debian.org/LTS for information regarding debian 9 lifecycle.
+Please consult https://wiki.debian.org/LTS for information regarding debian 8 lifecycle.
 
 ## Usage
 
 Please note this image is explictly intended to be run as a non-privileged user. Ensure you specify a user id (UID) other than zero when you run it. Running as root will not function.
 
 
-```bash
+```
+bash
 UID=999
 PORT=80
 WEB_ROOT="/var/www/"
 
-docker run -u ${UID}:0 -p ${PORT}:8080 -v ${WEB_ROOT}:/var/www/ 1and1internet/ubuntu-16-nginx-php-7.2
+docker run -u ${UID}:0 -p ${PORT}:8080 -v ${WEB_ROOT}:/var/www/ 1and1internet/debian-8-nginx-php-ui7.0
 ```
 
 ## Building and testing
