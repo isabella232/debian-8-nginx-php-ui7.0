@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 
 import unittest
-import os
-import docker
-import os.path
-import tarfile
-from io import BytesIO
 from testpack_helper_library.unittests.dockertests import Test1and1Common
 
 
@@ -15,29 +10,10 @@ class Test1and1ApacheImage(Test1and1Common):
     def setUpClass(cls):
         Test1and1Common.setUpClass()
         Test1and1Common.copy_test_files("testpack/files", "html", "/var/www")
-        Test1and1ApacheImage.copy_test_files("testpack/files", "html", "/var/www")
-
-    @classmethod
-    def copy_test_files(cls, startfolder, relative_source, dest):
-        # Change to the start folder
-        pwd = os.getcwd()
-        os.chdir(startfolder)
-        # Tar up the request folder
-        pw_tarstream = BytesIO()
-        with tarfile.open(fileobj=pw_tarstream, mode='w:gz') as tf:
-            tf.add(relative_source)
-        # Copy the archive to the correct destination
-        docker.APIClient().put_archive(
-            container=Test1and1Common.container.id,
-            path=dest,
-            data=pw_tarstream.getvalue()
-        )
-        # Change back to original folder
-        os.chdir(pwd)
 
     def check_success(self, page):
         driver = self.getChromeDriver()
-        driver.get("http://%s:8080/%s" % (Test1and1Common.container_ip, page))
+        driver.get("%s/%s" % (Test1and1Common.endpoint, page))
         self.assertTrue(
             driver.page_source.find('Success') > -1,
             msg="No success for %s" % page
@@ -45,7 +21,7 @@ class Test1and1ApacheImage(Test1and1Common):
 
     def file_mode_test(self, filename: str, mode: str):
         # Compare (eg) drwx???rw- to drwxr-xrw-
-        result = self.execRun("ls -ld %s" % filename)
+        result = self.exec("ls -ld %s" % filename)
         self.assertFalse(
             result.find("No such file or directory") > -1,
             msg="%s is missing" % filename
@@ -63,7 +39,7 @@ class Test1and1ApacheImage(Test1and1Common):
             "Loading php config",
             "Loading plugin /opt/configurability/goplugins/php.so"
         ]
-        container_logs = self.container.logs().decode('utf-8')
+        container_logs = self.logs()
         for expected_log_line in expected_log_lines:
             self.assertTrue(
                 container_logs.find(expected_log_line) > -1,
@@ -73,8 +49,8 @@ class Test1and1ApacheImage(Test1and1Common):
     def test_apache_var_www_html(self):
         self.file_mode_test("/var/www/html", "drwxrwxrwx")
 
-    def test_php_curl(self):
-        self.check_success("curltest.php")
+    '''def test_php_curl(self):
+        self.check_success("curltest.php")'''
 
     def test_php_gd(self):
         self.check_success("gdtest.php")
