@@ -9,8 +9,6 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
       - /secrets:/secrets
     commands:
-      - mkdir /tmp/vol
-      - mount --bind /tmp/vol /var/lib/docker
       - docker --config /secrets/ pull 1and1internet/template-library-tools
       - docker --config /secrets/ pull 1and1internet/testpack-framework
 
@@ -76,5 +74,3 @@ pipeline:
     commands:
       - docker rm -f $(docker ps -a | grep -v "$${HOSTNAME}" | awk '{print $1}') || true
       - docker rmi -f $(docker images -q) || true
-      - umount /var/lib/docker
-      - rm -rf /tmp/vol
