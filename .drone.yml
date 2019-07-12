@@ -30,6 +30,16 @@ pipeline:
     commands:
       - make --environment-overrides build IMAGE_NAME=build-${CI_BUILD_NUMBER}-${CI_REPO#*/}/${CI_REPO#*/}
 
+  makespace:
+    when:
+      event: push
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /secrets:/secrets
+    commands:
+      - docker images | grep -v build-${CI_BUILD_NUMBER}-${CI_REPO#*/}/${CI_REPO#*/} | grep -v REPOSITORY | awk '{ print $3 }' | xargs docker rmi -f || true
+
   test:
     when:
       event: push
