@@ -62,6 +62,16 @@ pipeline:
       - export IMAGE_NAME=build-${CI_BUILD_NUMBER}-${CI_REPO#*/}/${CI_REPO#*/}
       - start_ci_tests
 
+  makespace2:
+    when:
+      event: push
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /secrets:/secrets
+    commands:
+      - docker images | grep 'testpack' | awk '{ print $3 }' | xargs docker rmi -f || true
+
   publish:
     when:
       event: push

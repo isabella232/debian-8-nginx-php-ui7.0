@@ -25,7 +25,7 @@ COPY --from=configurability /go/src/github.com/1and1internet/configurability/bin
 
 RUN \
     apt-get update && \
-    apt-get install -y libpng12-0 libfreetype6 curl \
+    apt-get install -y imagemagick graphicsmagick curl \
 					   libc-client2007e libcurl3 libicu52 libjpeg62-turbo libmcrypt4 libtidy-0.99-0 libxslt1.1 \
 					   libiconv-hook1 libldap-2.4-2 libmhash2 libodbc1 \
 					   autoconf libtool \
