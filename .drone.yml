@@ -1,6 +1,18 @@
 ---
 pipeline:
 
+  clean_docker:
+    when:
+      event: push
+      status: [success, failure]
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /secrets:/secrets
+    commands:
+      - docker rm -f $(docker ps -a | grep -v "$${HOSTNAME}" | awk '{print $1}') || true
+      - docker rmi -f $(docker images -q) || true
+
   pull_tools:
     when:
       event: push
@@ -38,7 +50,7 @@ pipeline:
       - /var/run/docker.sock:/var/run/docker.sock
       - /secrets:/secrets
     commands:
-      - docker images | grep -v build-${CI_BUILD_NUMBER}-${CI_REPO#*/}/${CI_REPO#*/} | grep -v REPOSITORY | awk '{ print $3 }' | xargs docker rmi -f || true
+      - docker images | grep -v build-${CI_BUILD_NUMBER}-${CI_REPO#*/}/${CI_REPO#*/} | egrep -v 'REPOSITORY|testpack|template-library-tools' | awk '{ print $3 }' | xargs docker rmi -f || true
 
   test:
     when:
