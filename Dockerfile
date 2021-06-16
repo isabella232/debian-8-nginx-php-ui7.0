@@ -29,7 +29,7 @@ RUN \
 					   libc-client2007e libcurl3 libicu52 libjpeg62-turbo libmcrypt4 libtidy-0.99-0 libxslt1.1 \
 					   libiconv-hook1 libldap-2.4-2 libmhash2 libodbc1 \
 					   autoconf libtool \
-					   libpq5 libsnmp30 snmp-mibs-downloader libxmlrpc-epi0 librecode0 && \
+					   libpq5 libsnmp30 snmp-mibs-downloader libxmlrpc-epi0 librecode0 libgdbm-dev && \
     echo "PHP" && \
 		dpkg -i /tmp/php${PHPVER}*.deb && \
 		rm -f /tmp/php${PHPVER}*.deb && \
