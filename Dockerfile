@@ -53,7 +53,6 @@ RUN \
 		pecl channel-update pecl.php.net && \
 		pecl install gnupg && \
 		yes '' | pecl install imagick && \
-		yes '' | pecl install mongodb && \
     apt-get remove -y curl autoconf libtool make pkg-config libmagickwand-dev libssl-dev manpages manpages-dev && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* && \
